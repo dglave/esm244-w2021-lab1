@@ -1,0 +1,43 @@
+---
+title: "Lab 1, Winter 2021 (1/8/21)"
+author: "Dylan Glave"
+date: "1/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(sf)
+library(tmap)
+```
+
+
+
+
+## Lab #1, Winter 2020: Wrangling and Maps (of San Francisco, no less!)
+
+
+### First, I'll just read in the map of SF streets
+```{r}
+sf_trees <- read_csv(here("data", "sf_trees", "sf_trees.csv"))
+```
+
+### Basic Wrangling Reminders
+I'm refreshing some skills for wrangling and summary statistics. this is from 'dplyr' package
+
+Let's find the Top 5 highest observations of trees, by legal status. Then I'll wrangle. Then I'll make a graph. 
+```{r}
+top_5_status <- sf_trees %>% 
+  count(legal_status) %>% 
+  drop_na(legal_status) %>% 
+  rename(tree_count = n) %>% 
+  ### Select would work to select or remove columns, we'll use relocate! Relocate can move around any columns or variables. We put jsut 1 variable name, which moved that variable to the "front" (the left)
+relocate(tree_count) %>% 
+  slice_max(tree_count, n = 5) 
+```
+
+
+
+

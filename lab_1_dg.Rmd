@@ -38,6 +38,48 @@ relocate(tree_count) %>%
   slice_max(tree_count, n = 5) 
 ```
 
+Make a graph of the top 5 observations, by legal status. This is using the wrangled version of sf_trees, called top_5_status
+
+```{r}
+ggplot(data = top_5_status, aes (x = fct_reorder(legal_status, tree_count), y = tree_count)) +
+  geom_col() + 
+  labs( x = "Legal Status", y = "Tree Count", title = "SF Trees") +
+  coord_flip() +
+  theme_minimal()
+```
+
+### A few more Wrangling examples. I only want to keep observations (rows) of blackwood acacia trees. 
+
+```{r}
+blackwood_acacia <-  sf_trees %>% 
+filter(str_detect(species, "Blackwood Acacia")) %>% 
+  select(legal_status, date, latitude, longitude)
+```
+
+Making a faux-map, based on Latitude and Longitude. BUT R does not know that Lat/Long are spatial coordinates. 
+
+```{r}
+ggplot(data = blackwood_acacia, aes( x = longitude, y = latitude)) +
+  geom_point( size = 0.5)
+```
+
+
+### Using tidyr::separate() and unite() functions. 
+
+Useful for combining or separating columns. 
+
+```{r}
+sf_trees_sep <- sf_trees %>% 
+  separate(species, into = c("spp_scientific", "spp_common"), sep = "::")
+```
+
+Example: tidyr::unite to unite tree and legal status (weird)
+
+```{r}
+sf_tree_united <- sf_trees %>% 
+  unite("id_status", tree_id:legal_status, sep = "_cool!_")
+```
+
 
 
 
